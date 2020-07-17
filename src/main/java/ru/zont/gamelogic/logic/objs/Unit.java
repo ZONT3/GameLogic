@@ -95,6 +95,18 @@ public abstract class Unit extends StatedObject implements Entity {
                 ? ( range.getValue() != range.getKey() ? range.getKey() + "-" + range.getValue() : range.getKey()+"" )
                 : val+""; }
 
+        public boolean equals(Object o) {
+            if (super.equals(o)) return true;
+            if (o == null) return false;
+            if (o.getClass().isInstance(val)) return o.equals(val);
+            if (o instanceof Property) {
+                Property prop = (Property) o;
+                return val.equals(prop.val)
+                        && (range == null && prop.range == null || range.equals(prop.range));
+            }
+            return false;
+        }
+
         @Override
         public String toString() {
             return String.format("%s [%s]", get().toString(), disp());
