@@ -8,15 +8,22 @@ import java.util.Objects;
 public abstract class Unit extends StatedObject implements Entity {
     protected int hp;
     protected boolean entity;
+    protected EquipSetup equip;
 
     public abstract String manuf();
     public abstract String label();
     public abstract String alias();
     public abstract String suffix();
-    public abstract EquipSetup getEquip();
+    public abstract EquipPatterns defaultEquip();
+
+    public final EquipSetup getEquip() {
+        if (equip == null) equip = defaultEquip().get();
+        if (equip == null) equip = new EquipSetup(this);
+        return equip;
+    }
 
     @Override
-    public DynamicName getName() {
+    public final DynamicName getName() {
         return NameBuilder.from(getClass()).buildDefault();
     }
 

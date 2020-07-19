@@ -1,5 +1,5 @@
 import org.junit.Test;
-import ru.zont.gamelogic.logic.objs.EquipSetup;
+import ru.zont.gamelogic.logic.objs.EquipPatterns;
 import ru.zont.gamelogic.logic.objs.Plane;
 import ru.zont.gamelogic.logic.objs.Unit.Property;
 
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import static org.junit.Assert.*;
 
 public class TestMain {
     private static final int PLANE_PROPCNT = 3;
@@ -48,7 +49,7 @@ public class TestMain {
         }
 
         @Override
-        public EquipSetup getEquip() {
+        public EquipPatterns defaultEquip() {
             return null;
         }
 
@@ -69,37 +70,41 @@ public class TestMain {
     public void propertiesEquals() {
         Plane p1 = new Pizdauskas();
         Plane p2 = new Lolkek();
-        assert p1.size().equals(22);
-        assert p2.size().equals(44);
-        assert p1.size() != p2.size();
-        assert !p1.size().equals(p2.size());
-        assert p1.speed().equals(p2.speed());
-        assert p1.speed() != p2.speed();
+        assertEquals(Integer.valueOf(22), p1.size().get());
+        assertEquals(Integer.valueOf(44), p2.size().get());
+        assertNotSame(p1.size(), p2.size());
+        assertNotEquals(p1.size(), p2.size());
+        assertEquals(p1.speed(), p2.speed());
+        assertNotSame(p1.speed(), p2.speed());
     }
 
     @Test
     public void planeBasic() {
         Plane pizdauskas = new Pizdauskas();
         HashMap<String, Property<?>> map = pizdauskas.getStats();
-        assert map.size() == PLANE_PROPCNT;
-        assert pizdauskas.getMaxHP() == 150;
-        assert pizdauskas.speed().get().equals(14);
+        assertEquals(map.size(), PLANE_PROPCNT);
+        assertEquals(pizdauskas.getMaxHP(), 150);
+        assertEquals(14, (int) pizdauskas.speed().get());
     }
 
     @Test
     public void planeBatchCreation() {
         ArrayList<Plane> list = new ArrayList<>();
         for (int i = 0; i < 10000; i++) list.add(new Pizdauskas());
-        assert list.size() == 10000;
-        assert list.get(228).speed().equals(14);
+        assertEquals(list.size(), 10000);
+        assertEquals(Integer.valueOf(14), list.get(228).speed().get());
     }
 
     @Test
     public void planeBatchCreationOpt() {
         LinkedList<Plane> list = new LinkedList<>();
         for (int i = 0; i < 10000; i++) list.add(new Pizdauskas());
-        assert list.size() == 10000;
+        assertEquals(list.size(), 10000);
     }
 
-
+    @Test
+    public void planeEquipment() {
+        Plane p = new Pizdauskas();
+        // TODO
+    }
 }
