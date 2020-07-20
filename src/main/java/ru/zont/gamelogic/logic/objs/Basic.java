@@ -27,12 +27,16 @@ public abstract class Basic/* implements Cloneable*/ {
     @Override
     public abstract String toString();
 
+    /**
+     * Literally, the same class
+     */
     @Override
-    public boolean equals(Object o) {
-        return this == o;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        return this.getClass().equals(obj.getClass());
     }
 
-//
+    //
 //    @Override
 //    public Basic clone() throws CloneNotSupportedException {
 //        if (getClass().isAnonymousClass()) throw new CloneNotSupportedException("Object is anonymous");

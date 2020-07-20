@@ -6,26 +6,32 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class EquipPatterns {
-    private final ArrayList<Pair<EquipSetup, Integer>> patterns;
+    private final ArrayList<Pair<EquipSetup.Template, Integer>> patterns;
     private int totalW;
     protected Random rand;
 
-    public EquipPatterns() {
+    private EquipPatterns() {
         this.patterns = new ArrayList<>();
         totalW = 0;
         rand = new Random();
     }
 
+    /**
+     * Equipment setup patterns.
+     * @param patterns Integer in pair - weight of pattern.
+     *                 When there is more than one pattern, method get() will return a random one,
+     *                 depends on that property.
+     */
     @SafeVarargs
-    public EquipPatterns(Pair<EquipSetup, Integer>... patterns) {
+    public EquipPatterns(Pair<EquipSetup.Template, Integer>... patterns) {
         this();
-        for (Pair<EquipSetup, Integer> s: patterns)
+        for (Pair<EquipSetup.Template, Integer> s: patterns)
             add(s.getKey(), s.getValue());
     }
 
-    public EquipPatterns(EquipSetup... patterns) {
+    public EquipPatterns(EquipSetup.Template... patterns) {
         this();
-        for (EquipSetup s: patterns)
+        for (EquipSetup.Template s: patterns)
             add(s, 1);
     }
 
@@ -34,23 +40,18 @@ public class EquipPatterns {
         return this;
     }
 
-    public void add(EquipSetup pattern, Integer weight) {
+    public void add(EquipSetup.Template pattern, Integer weight) {
         patterns.add(new Pair<>(pattern, weight));
         totalW += weight;
     }
 
-    public EquipSetup get(Unit u) {
-        EquipSetup r = get();
-        return r == null ? new EquipSetup(u) : r;
-    }
-
     public EquipSetup get() {
-        if (patterns.isEmpty()) return null;
+        if (patterns.isEmpty()) throw new RuntimeException("Patterns is empty");
 
         int targ = rand.nextInt(totalW), i = 0;
-        for (Pair<EquipSetup, Integer> pattern : patterns) {
+        for (Pair<EquipSetup.Template, Integer> pattern : patterns) {
             i += pattern.getValue();
-            if (i >= targ) return pattern.getKey();
+            if (i > targ) return pattern.getKey().buildSetup();
         }
         throw new RuntimeException("WTF exception");
     }
